@@ -31,7 +31,6 @@ sub download {
         Carp::croak('URL not found');
     }
     my $video_url = $self->get_video_url($upid);
-    my $filename = $self->get_filename($upid);
 
     my $req = HTTP::Request->new(GET => $video_url);
     my $res = $self->{agent}->request($req, @args);

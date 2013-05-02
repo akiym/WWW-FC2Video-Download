@@ -1,5 +1,6 @@
 requires 'perl', '5.008001';
 
+requires 'Digest::MD5';
 requires 'LWP::UserAgent';
 requires 'URI';
 

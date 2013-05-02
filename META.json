@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "FC2 video download interface",
    "author" : [
       "Takumi Akiyama <t.akiym@gmail.com>"
    ],
@@ -42,6 +42,9 @@
       },
       "runtime" : {
          "requires" : {
+            "Digest::MD5" : "0",
+            "LWP::UserAgent" : "0",
+            "URI" : "0",
             "perl" : "5.008005"
          }
       },
@@ -52,5 +55,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/akiym/WWW-FC2Video-Download/issues"
+      },
+      "homepage" : "https://github.com/akiym/WWW-FC2Video-Download",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/akiym/WWW-FC2Video-Download.git",
+         "web" : "https://github.com/akiym/WWW-FC2Video-Download"
+      }
+   },
    "version" : "0.01"
 }

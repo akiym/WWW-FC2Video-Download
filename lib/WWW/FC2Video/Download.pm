@@ -36,7 +36,7 @@ sub download {
 
 sub prepare_download {
     my ($self, $upid) = @_;
-    if ($upid =~ m!/content/(\w+)/!) {
+    if ($upid =~ m!/content/(\w+)!) {
         $upid = $1;
     }
     return $self->{cache}{$upid} if exists $self->{cache}{$upid};

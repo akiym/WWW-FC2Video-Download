@@ -105,15 +105,70 @@ __END__
 
 =head1 NAME
 
-WWW::FC2Video::Download - It's new $module
+WWW::FC2Video::Download - FC2 video download interface
 
 =head1 SYNOPSIS
 
     use WWW::FC2Video::Download;
 
+    my $client = WWW::FC2Video::Download->new();
+    $client->download($upid);
+
+    my $video_url = $client->get_video_url($upid);
+    my $title     = $client->get_title($upid);
+    my $filename  = $client->get_filename($upid);
+    my $suffix    = $client->get_suffix($upid);
+
 =head1 DESCRIPTION
 
-WWW::FC2Video::Download is ...
+WWW::FC2Video::Download is wonderful!
+
+=head1 METHODS
+
+=over 4
+
+=item new([%args])
+
+Create a instance of WWW::FC2Video::Download.
+
+=item download($upid, [@args])
+
+Download the video. $upid can also pass to FC2 video URL.
+
+  my $filename = $client->get_filename($upid);
+  my $fh;
+  $client->download($upid, sub {
+      my ($data, $res, $proto) = @_;
+      unless ($fh) {
+          open $fh, '>', "./$filename" or die $!;
+      }
+      print {$fh} $data;
+  });
+
+=item get_title($upid)
+
+=item get_filename($upid)
+
+=item get_suffix($upid)
+
+=item get_video_url($upid)
+
+=back
+
+=head1 HACKING
+
+=over 4
+
+=item I've got to download an imcomplete video. Why?
+
+Perhaps, you attempted to download the video require pay member registration. Unfortunately, you CANNOT download it ;(
+
+  my $data = $client->prepare_download($upid);
+  if ($data->{charger}) {
+      # pay member registration is required.
+  }
+
+=back
 
 =head1 LICENSE
 

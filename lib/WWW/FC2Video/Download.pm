@@ -26,12 +26,7 @@ sub download {
     my ($self, $upid, @args) = @_;
     Carp::croak('Missing mandatory parameter: upid') unless defined $upid;
 
-    my $data = $self->prepare_download($upid);
-    unless ($data->{filepath}) {
-        Carp::croak('URL not found');
-    }
     my $video_url = $self->get_video_url($upid);
-
     my $req = HTTP::Request->new(GET => $video_url);
     my $res = $self->{agent}->request($req, @args);
     unless ($res->is_success) {
@@ -44,7 +39,18 @@ sub prepare_download {
     if ($upid =~ m!/content/(\w+)/!) {
         $upid = $1;
     }
-    return $self->{cache}{$upid} ||= $self->_ginfo($upid);
+    return $self->{cache}{$upid} if exists $self->{cache}{$upid};
+
+    my $data = $self->_ginfo($upid);
+    if ($data->{err_code} && $data->{err_code} == 403) {
+        Carp::croak('This video has been disabled');
+    }
+    if (not exists $data->{filepath}) {
+        Carp::croak('This content has already been deleted or set for private by the submitter');
+    } elsif ($data->{filepath} eq '') {
+        Carp::croak('This video is not found');
+    }
+    return $self->{cache}{$upid} = $data;
 }
 
 sub get_filename {

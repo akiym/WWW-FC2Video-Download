@@ -159,7 +159,7 @@ Download the video. $upid can also pass to FC2 video URL.
 
 =over 4
 
-=item I've got to download an imcomplete video. Why?
+=item I've got to download an incomplete video. Why?
 
 Perhaps, you attempted to download the video require pay member registration. Unfortunately, you CANNOT download it ;(
 

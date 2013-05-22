@@ -7,7 +7,6 @@ WWW::FC2Video::Download - FC2 video download interface
     use WWW::FC2Video::Download;
 
     my $client = WWW::FC2Video::Download->new();
-    $client->download($upid);
 
     my $video_url = $client->get_video_url($upid);
     my $title     = $client->get_title($upid);
@@ -16,13 +15,13 @@ WWW::FC2Video::Download - FC2 video download interface
 
 # DESCRIPTION
 
-WWW::FC2Video::Download is wonderful!
+WWW::FC2Video::Download is a module to download video files from video.fc2.com.
 
 # METHODS
 
 - new(\[%args\])
 
-    Create a instance of WWW::FC2Video::Download.
+    Create an instance of WWW::FC2Video::Download.
 
 - download($upid, \[@args\])
 
@@ -45,7 +44,7 @@ WWW::FC2Video::Download is wonderful!
 
 # HACKING
 
-- I've got to download an imcomplete video. Why?
+- I've got to download an incomplete video. Why?
 
     Perhaps, you attempted to download the video require pay member registration. Unfortunately, you CANNOT download it ;(
 

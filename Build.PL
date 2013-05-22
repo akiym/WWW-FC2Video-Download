@@ -23,8 +23,9 @@ my %args = (
         'Module::Build' => 0.38,
     },
 
-    name        => 'WWW-FC2Video-Download',
-    module_name => 'WWW::FC2Video::Download',
+    name            => 'WWW-FC2Video-Download',
+    module_name     => 'WWW::FC2Video::Download',
+    allow_pure_perl => 0,
 
     script_files => [glob('script/*'), glob('bin/*')],
 

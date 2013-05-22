@@ -4,7 +4,7 @@
       "Takumi Akiyama <t.akiym@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.2.0, CPAN::Meta::Converter version 2.130880",
+   "generated_by" : "Minilla/v0.4.3, CPAN::Meta::Converter version 2.130880",
    "license" : [
       "perl_5"
    ],

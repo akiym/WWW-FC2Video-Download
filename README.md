@@ -23,6 +23,18 @@ WWW::FC2Video::Download is a module to download video files from video.fc2.com.
 
     Create an instance of WWW::FC2Video::Download.
 
+    - email
+
+        Email address
+
+    - password
+
+        Password
+
+    - agent
+
+        [LWP::UserAgent](http://search.cpan.org/perldoc?LWP::UserAgent)
+
 - download($upid, \[@args\])
 
     Download the video. $upid can also pass to FC2 video URL.
@@ -36,6 +48,15 @@ WWW::FC2Video::Download is a module to download video files from video.fc2.com.
             }
             print {$fh} $data;
         });
+
+- login()
+
+    Login with email and password.
+
+        my $client = WWW::FC2Video::Download->new(
+            email    => 'foo@example.com',
+            password => 'p4ssw0rd',
+        );
 
 - get\_title($upid)
 - get\_filename($upid)

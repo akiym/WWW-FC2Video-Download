@@ -15,9 +15,12 @@ our $SALT = 'gGddgPfeaf_gzyr';
 sub new {
     my ($class, %args) = @_;
     unless (exists $args{agent}) {
-        $args{agent} = LWP::UserAgent->new(
-            agent => __PACKAGE__ . '/' . $VERSION,
+        my $ua = LWP::UserAgent->new(
+            agent      => __PACKAGE__ . '/' . $VERSION,
+            cookie_jar => {},
         );
+        push @{$ua->requests_redirectable}, 'POST';
+        $args{agent} = $ua;
     }
     return bless \%args, $class;
 }
@@ -51,6 +54,27 @@ sub prepare_download {
         Carp::croak('This video is not found');
     }
     return $self->{cache}{$upid} = $data;
+}
+
+sub login {
+    my $self = shift;
+
+    Carp::croak('Missing mandatory parameter: email') unless defined $self->{email};
+    Carp::croak('Missing mandatory parameter: password') unless defined $self->{password};
+
+    my $res = $self->{agent}->post('https://secure.id.fc2.com/index.php?mode=login', {
+        email => $self->{email},
+        pass  => $self->{password},
+    });
+    if ($res->is_error) {
+        Carp::croak('Login failed: ', $res->status_line);
+    } elsif ($res->request->uri =~ /error=1/) {
+        Carp::croak('Login failed because of invalid e-mail address or password');
+    }
+
+    $self->{agent}->get('http://id.fc2.com/?login=done');
+
+    return 1;
 }
 
 sub get_filename {
@@ -130,6 +154,22 @@ WWW::FC2Video::Download is a module to download video files from video.fc2.com.
 
 Create an instance of WWW::FC2Video::Download.
 
+=over 4
+
+=item email
+
+Email address
+
+=item password
+
+Password
+
+=item agent
+
+L<LWP::UserAgent>
+
+=back
+
 =item download($upid, [@args])
 
 Download the video. $upid can also pass to FC2 video URL.
@@ -143,6 +183,15 @@ Download the video. $upid can also pass to FC2 video URL.
       }
       print {$fh} $data;
   });
+
+=item login()
+
+Login with email and password.
+
+  my $client = WWW::FC2Video::Download->new(
+      email    => 'foo@example.com',
+      password => 'p4ssw0rd',
+  );
 
 =item get_title($upid)
 

@@ -1,17 +1,24 @@
 use strict;
 use warnings;
-use LWP::UserAgent;
+use Getopt::Long;
+use Pod::Usage;
 use Term::ProgressBar;
 use WWW::FC2Video::Download;
 use Web::Query;
 
-my $url = shift;
-if (!$url || $url !~ m!video\.fc2\.com/a/member!) {
-    die "Usage: $0 http://video.fc2.com/a/member/*\n";
-}
+my %opt;
+GetOptions(
+    'email=s'    => \$opt{email},
+    'password=s' => \$opt{password},
+) or pod2usage(2);
 
-my $ua = LWP::UserAgent->new();
-my $client = WWW::FC2Video::Download->new();
+my $url = shift;
+pod2usage(2) if !$url || $url !~ m!video\.fc2\.com/a/member!;
+
+my $client = WWW::FC2Video::Download->new(%opt);
+if ($opt{email}) {
+    $client->login;
+}
 
 my $q = URI->new($url);
 my %query = $q->query_form();
@@ -24,7 +31,12 @@ while ($page < 100) { # limit
     last unless @href;
 
     for my $video_url (@href) {
-        my $data = $client->prepare_download($video_url);
+        my $data = eval { $client->prepare_download($video_url) };
+        if ($@) {
+            warn "$video_url: $@";
+            next;
+        }
+
         if ($data->{charger}) {
             warn 'Pay member registration is required';
             next;
@@ -48,3 +60,16 @@ while ($page < 100) { # limit
 
     $page++;
 }
+
+__END__
+
+=head1 SYNOPSIS
+
+  % perl eg/fc2video-list.pl MEMBER_URL
+
+  --email       Email address (optional)
+  --password    Password (optional)
+
+  MEMBER_URL begins with http://video.fc2.com/a/member/.
+
+=cut

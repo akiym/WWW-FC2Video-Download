@@ -11,6 +11,7 @@ use URI;
 our $VERSION = "0.01";
 
 our $SALT = 'gGddgPfeaf_gzyr';
+our $API_SERVER = '50.112.136.211';
 
 sub new {
     my ($class, %args) = @_;
@@ -45,7 +46,7 @@ sub prepare_download {
     return $self->{cache}{$upid} if exists $self->{cache}{$upid};
 
     my $data = $self->_ginfo($upid);
-    if ($data->{err_code} && $data->{err_code} == 403) {
+    if ($data->{filepath} eq '' && $data->{err_code} && $data->{err_code} == 403) {
         Carp::croak('This video has been disabled');
     }
     if (not exists $data->{filepath}) {
@@ -106,8 +107,10 @@ sub _ginfo {
     my ($self, $upid) = @_;
 
     my $mimi = $self->_gen_mimi($upid);
-    my $url = "http://video.fc2.com/ginfo.php?upid=$upid&mimi=$mimi";
-    my $res = $self->{agent}->get($url);
+    my $url = "http://$API_SERVER/ginfo.php?upid=$upid&mimi=$mimi";
+    my $res = $self->{agent}->get($url,
+        Host => 'video.fc2.com',
+    );
     unless ($res->is_success) {
         Carp::croak('ginfo API error: ', $res->status_line);
     }
